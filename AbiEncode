@@ -1,0 +1,188 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.10;
+
+//import "@boringcrypto/boring-solidity/contracts/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+
+contract AbiDecode {
+   // 11 (bool must_update, uint256 minRate, uint256 maxRate) = abi.decode(datas[i], (bool, uint256, uint256));
+    function encodeUPDATE_EXCHANGE_RATE(
+        bool must_update,
+        uint256 minRate,
+         uint256 maxRate
+    ) external pure returns (bytes memory){
+         return  abi.encode(must_update,minRate, maxRate) ;   
+    }
+
+    function decodeUPDATE_EXCHANGE_RATE(bytes calldata data  ) external pure returns (
+         bool must_update,
+        uint256 minRate,
+         uint256 maxRate
+    ) {
+         ( must_update,minRate,maxRate) = abi.decode(data,(bool,uint256,uint256)) ;
+    }
+
+
+
+    //4  ACTION_REMOVE_COLLATERAL
+    // (int256 share, address to) = abi.decode(datas[i], (int256, address));
+   function encodeREMOVE_COLLATERAL(
+          int256 share,
+          address to
+    ) external pure returns (bytes memory){
+         return  abi.encode(share,to) ;   
+    }
+
+    function decodeREMOVE_COLLATERAL(bytes calldata data  ) external pure returns (
+         int256 share,
+          address to
+    ) {
+         ( share,to) = abi.decode(data,(int256,address)) ;
+    }
+
+
+
+   //30  ACTION_CALL
+//    (address callee, bytes memory callData, bool useValue1, bool useValue2, uint8 returnValues) =
+//             abi.decode(data, (address, bytes, bool, bool, uint8));
+   function encode_CALL(
+        address callee, 
+        bytes memory callData,
+        bool useValue1,
+        bool useValue2,
+        uint8 returnValues
+    ) external pure returns (bytes memory){
+         return  abi.encode(callee,callData,useValue1,useValue2,returnValues) ;   
+    }
+
+    function decode_CALL(bytes calldata data  ) external pure returns (
+        address callee, 
+        bytes memory callData,
+        bool useValue1,
+        bool useValue2,
+        uint8 returnValues
+    ) {
+         ( callee,callData,useValue1,useValue2,returnValues) = abi.decode(data,(address,bytes,bool,bool,uint8)) ;
+    }
+
+
+
+//2 ACTION_REPAY (int256 part, address to, bool skim) = abi.decode(datas[i], (int256, address, bool));
+   function encode_REPAY(
+       int256 part, 
+       address to,
+        bool skim
+    ) external pure returns (bytes memory){
+         return  abi.encode(part,to,skim) ;   
+    }
+
+    function decode_REPAY(bytes calldata data  ) external pure returns (
+        int256 part, 
+       address to,
+        bool skim
+    ) {
+         ( part,to,skim) = abi.decode(data,(int256,address,bool)) ;
+    }
+
+
+
+
+//21  (IERC20 token, address to, int256 amount, int256 share) = abi.decode(data, (IERC20, address, int256, int256));
+   function encode_BENTO_WITHDRAW(
+      IERC20 token,
+       address to,
+        int256 amount,
+         int256 share
+    ) external pure returns (bytes memory){
+         return  abi.encode(token,to,amount,share) ;   
+    }
+
+    function decode_BENTO_WITHDRAW(bytes calldata data  ) external pure returns (
+       IERC20 token,
+       address to,
+        int256 amount,
+         int256 share
+    ) {
+         ( token,to,amount,share) = abi.decode(data,(IERC20,address,int256,int256)) ;
+    }
+
+
+
+//UST 兑换成 MIM
+    function encode_MIM(
+       IERC20 fromToken,
+        IERC20 toToken,
+         address recipient ,
+        uint256 shareToMin ,
+        uint256  shareFrom
+ 
+//  IERC20 fromToken,\n  
+// 		 IERC20 toToken,\n      
+// 		 address recipient,\n      
+// 		 uint256 shareToMin,\n    
+// 		 uint256 shareFrom\n  
+
+    ) external pure returns (bytes memory){
+         return  abi.encode(fromToken,toToken,recipient,shareToMin,shareFrom) ;   
+    }
+
+    function decode_MIM(bytes calldata data  ) external pure returns (
+         IERC20 fromToken,
+        IERC20 toToken,
+         address recipient ,
+        uint256 shareToMin ,
+        uint256  shareFrom
+    ) {
+         ( fromToken,toToken,recipient,shareToMin,shareFrom) = abi.decode(data,(IERC20,IERC20,address,uint256,uint256)) ;
+    }
+
+
+
+
+    //init
+    function encode_init(
+          //MethodID: 0x656f3d64
+           //ether   payableAmont,
+          // uint256 value,
+        	uint8[]  calldata actions,
+        	uint256[] calldata values,
+            	bytes[] calldata  datas
+    ) external pure returns (bytes memory){
+         return  abi.encode(actions,values,datas) ;   
+    }
+
+    function decode_init(bytes calldata data  ) external pure returns (
+         // ether  payableAmont,
+         // uint256 value,
+        	uint8[]  memory actions,
+        	uint256[] memory values,
+            bytes[] memory  datas
+    ) {
+         (  actions,values,datas) = abi.decode(data,(uint8[] ,uint256[],	bytes[])) ;
+    }
+
+
+        //initall
+     function encode_testinit(
+          //MethodID: 0x656f3d64
+           //ether   payableAmont,
+          // uint256 value,
+        	uint8[]  calldata actions,//[11,4,30,2,4,21]
+        	uint256[] calldata values,//[0,0,0,0,0,0]
+            	bytes[] calldata  datas //["0x000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", "0x00000000000000000000000000000000000000000000319600cb10d3ba92f640000000000000000000000000ff498bbcbf40d0f30f178f553e8fa36153baf30b", "0x000000000000000000000000ff498bbcbf40d0f30f178f553e8fa36153baf30b00000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000a4e343fe12000000000000000000000000a47c8bf37f92abed4a126bda807a7b7498661acd00000000000000000000000099d8a9c45b2eca8864373a26d1459e3dff1e17f3000000000000000000000000b98b1560b04b14bf924c5ca890f919b0f93849e1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000319600cb10d3ba92f64000000000000000000000000000000000000000000000000000000000", "0x0000000000000000000000000000000000000000000033265f6106cb46ed02fe000000000000000000000000b98b1560b04b14bf924c5ca890f919b0f93849e10000000000000000000000000000000000000000000000000000000000000000", "0x00000000000000000000000000000000000000000000149b17c86a201aaf7b78000000000000000000000000b98b1560b04b14bf924c5ca890f919b0f93849e1", "0x000000000000000000000000a47c8bf37f92abed4a126bda807a7b7498661acd000000000000000000000000b98b1560b04b14bf924c5ca890f919b0f93849e1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000149b17c86a201aaf7b78"]
+    ) external pure returns (bytes memory){
+         return  abi.encode(actions,values,datas) ;   
+    }
+
+    function decode_testinit(bytes calldata data  ) external pure returns (
+         // ether  payableAmont,
+         // uint256 value,
+        	uint8[]  memory actions,
+        	uint256[] memory values,
+            bytes[] memory  datas
+    ) {
+         (  actions,values,datas) = abi.decode(data,(uint8[] ,uint256[], bytes[])) ;
+    }
+
+}
